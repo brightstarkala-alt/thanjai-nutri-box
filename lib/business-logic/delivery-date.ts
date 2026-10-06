@@ -1,10 +1,16 @@
 import type { CalendarDay } from "@/lib/types";
 
-// Earliest selectable delivery date. Currently a simple "tomorrow" rule.
-// Once Supabase is connected, this must respect the admin-configured order
-// cutoff time (default 10 PM the previous day).
-export function getMinDeliveryDate(): string {
-  return toDateInputValue(addDays(new Date(), 1));
+// Earliest selectable delivery date: tomorrow, unless today's order cutoff
+// (business_settings.default_cutoff_time, e.g. "22:00:00") has passed —
+// then the day after. Matches the check in place_customer_order.
+export function getMinDeliveryDate(cutoffTime?: string | null): string {
+  const now = new Date();
+  let daysAhead = 1;
+  if (cutoffTime) {
+    const [h, m] = cutoffTime.split(":").map(Number);
+    if (now.getHours() * 60 + now.getMinutes() >= h * 60 + (m || 0)) daysAhead = 2;
+  }
+  return toDateInputValue(addDays(now, daysAhead));
 }
 
 export function toDateInputValue(date: Date): string {
@@ -142,6 +148,20 @@ export function getWeeklyScheduleDates(
     }
   }
   return dates;
+}
+
+/**
+ * Monday-to-Saturday of the week starting `startMonday`, with eligibility
+ * flags (past / holiday / no-service), same rules as every other picker.
+ */
+export function getWeekDeliveryDays(
+  startMonday: string,
+  minDate: string,
+  noServiceDates: string[] = []
+): CalendarDay[] {
+  return getWeeklyScheduleDates(startMonday, 1).map((date) =>
+    buildCalendarDay(new Date(`${date}T00:00:00`), minDate, noServiceDates)
+  );
 }
 
 /** Upcoming months (this month + `count` - 1 more) for the monthly picker. */

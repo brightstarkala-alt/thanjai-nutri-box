@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored in-browser OCR engine, copied from node_modules.
+    "public/ocr/**",
   ]),
 ]);
 

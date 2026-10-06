@@ -9,6 +9,22 @@
   --brand-dark: #21703b;
   --brand-light: #e9f6ee;
   --brand-contrast: #ffffff;
+
+  /* Customer order UI palette (from the Lovable design reference). Kept
+     under its own names so pages using background/foreground/brand —
+     admin, home — are unaffected. */
+  --canvas: oklch(0.965 0.018 92);
+  --surface: oklch(0.985 0.012 93);
+  --surface-strong: oklch(0.995 0.006 93);
+  --surface-muted: oklch(0.935 0.025 90);
+  --ink: oklch(0.235 0.035 95);
+  --ink-soft: oklch(0.5 0.035 95);
+  --leaf: oklch(0.45 0.12 145);
+  --leaf-deep: oklch(0.33 0.09 145);
+  --leaf-soft: oklch(0.9 0.075 145);
+  --line-soft: oklch(0.86 0.035 88);
+  --on-leaf: oklch(0.985 0.012 93);
+  --danger: oklch(0.58 0.16 28);
 }
 
 @theme inline {
@@ -20,10 +36,38 @@
   --color-brand-contrast: var(--brand-contrast);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-body: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-lora), Georgia, ui-serif, serif;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-surface-muted: var(--surface-muted);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-leaf: var(--leaf);
+  --color-leaf-deep: var(--leaf-deep);
+  --color-leaf-soft: var(--leaf-soft);
+  --color-line-soft: var(--line-soft);
+  --color-on-leaf: var(--on-leaf);
+  --color-danger: var(--danger);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float-in {
+  animation: float-in 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-in { animation: none; }
 }
